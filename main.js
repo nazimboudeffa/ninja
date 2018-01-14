@@ -29,6 +29,9 @@ function create() {
   layer.resizeWorld();
   layer.wrap = true;
   map.setCollisionByIndex(35);
+  map.setCollisionByIndex(54);
+  map.setCollisionByIndex(70);
+  map.setCollisionByIndex(86);
   map.setCollisionByIndex(109);
   map.setCollisionByIndex(110);
   map.setCollisionByIndex(126);
@@ -130,5 +133,5 @@ function update(){
 }
 
 function render() {
-  game.debug.bodyInfo(ninja.sprite, 32, 32);
+  //game.debug.bodyInfo(ninja.sprite, 32, 32);
 }
