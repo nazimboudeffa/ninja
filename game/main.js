@@ -1,7 +1,7 @@
 var game = new Phaser.Game(640, 480, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render:render});
 //320, 240
 function preload() {
-  game.load.tilemap('objects', 'assets/level.json', null, Phaser.Tilemap.TILED_JSON);
+  game.load.tilemap('objects', 'assets/level1-1.json', null, Phaser.Tilemap.TILED_JSON);
   game.load.image('tiles', 'assets/Tileset.png');
   game.load.spritesheet('ninja', 'assets/Spritesheet.png', 80, 80, 20);
   game.load.image("background", "assets/0.png");
