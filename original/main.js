@@ -1,5 +1,5 @@
-var game = new Phaser.Game(320, 240, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render:render});
-
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render:render});
+//320, 240
 function preload() {
   game.load.tilemap('objects', 'assets/level.json', null, Phaser.Tilemap.TILED_JSON);
   game.load.image('tiles', 'assets/Tileset.png');
@@ -19,6 +19,12 @@ var ninja = {
   direction: 'right',
   doNothing: true
 };
+
+function init() {
+  game.scale.scaleMode = Phaser.scaleManager.RESIZE;
+  //game.scale.pageAlignVertically = true;
+  //game.scale.pageAlignHorizontally = true;
+}
 
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -43,7 +49,7 @@ function create() {
   map.setCollisionByIndex(162);
   map.setCollisionByIndex(167);
 
-  ninja.sprite = game.add.sprite(100, 100, 'ninja');
+  ninja.sprite = game.add.sprite(150, 100, 'ninja');
   ninja.sprite.scale.setTo(0.47, 0.47);
   ninja.sprite.anchor.x=0.5;
   ninja.sprite.anchor.y=0.5;
