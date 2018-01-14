@@ -4,6 +4,7 @@ function preload() {
   game.load.tilemap('objects', 'assets/level.json', null, Phaser.Tilemap.TILED_JSON);
   game.load.image('tiles', 'assets/Tileset.png');
   game.load.spritesheet('ninja', 'assets/Spritesheet.png', 32, 26, 11);
+  game.load.image("background", "assets/0.png");
 }
 
 var map;
@@ -22,6 +23,7 @@ var ninja = {
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
   game.stage.backgroundColor = '#5C94FC';
+  game.add.tileSprite(0, 0, 384, 216, 'background');
 
   map = game.add.tilemap('objects');
   map.addTilesetImage('Tileset', 'tiles');
