@@ -3,12 +3,12 @@ var game = new Phaser.Game(640, 480, Phaser.CANVAS, 'game', { preload: preload, 
 function preload() {
   game.load.tilemap('objects', 'assets/level.json', null, Phaser.Tilemap.TILED_JSON);
   game.load.image('tiles', 'assets/Tileset.png');
-  game.load.spritesheet('ninja', 'assets/Spritesheet.png', 128, 104, 11);
+  game.load.spritesheet('ninja', 'assets/Spritesheet-Optimised.png', 80, 80, 20);
   game.load.image("background", "assets/0.png");
 }
 
 var map;
-var layer;
+var layer1, layer2;
 var cursors;
 var jumpButton;
 var runButton;
@@ -21,9 +21,9 @@ var ninja = {
 };
 
 function init() {
-  game.scale.scaleMode = Phaser.scaleManager.RESIZE;
-  //game.scale.pageAlignVertically = true;
-  //game.scale.pageAlignHorizontally = true;
+  game.scale.scaleMode = Phaser.scaleManager.SOW_ALL;
+  game.scale.pageAlignVertically = true;
+  game.scale.pageAlignHorizontally = true;
 }
 
 function create() {
@@ -33,21 +33,15 @@ function create() {
 
   map = game.add.tilemap('objects');
   map.addTilesetImage('Tileset', 'tiles');
-  layer = map.createLayer('Calque de Tile 1');
-  layer.resizeWorld();
-  layer.wrap = true;
-  map.setCollisionByIndex(35);
-  map.setCollisionByIndex(54);
-  map.setCollisionByIndex(70);
-  map.setCollisionByIndex(86);
-  map.setCollisionByIndex(109);
-  map.setCollisionByIndex(110);
-  map.setCollisionByIndex(126);
-  map.setCollisionByIndex(142);
-  map.setCollisionByIndex(193);
-  map.setCollisionByIndex(177);
-  map.setCollisionByIndex(162);
-  map.setCollisionByIndex(167);
+
+  layer1 = map.createLayer('Calque de Tile 1');
+  layer1.resizeWorld();
+  layer1.wrap = true;
+
+  layer2 = map.createLayer('Calque 2');
+
+  game.physics.arcade.enable(layer2);
+  map.setCollisionBetween(0, 255, true, layer2);
 
   ninja.sprite = game.add.sprite(300, 200, 'ninja');
   ninja.sprite.scale.setTo(0.47, 0.47);
@@ -61,8 +55,8 @@ function create() {
   ninja.sprite.body.collideWorldBounds = true;
 
   ninja.sprite.animations.add('idle', [0, 1, 2, 3], 10, true);
-  ninja.sprite.animations.add('jump', [4], 10, true);
-  ninja.sprite.animations.add('left', [8, 9, 10], 10, true);
+  ninja.sprite.animations.add('jump', [5], 10, true);
+  ninja.sprite.animations.add('left', [10, 11, 12], 10, true);
 
   ninja.sprite.body.fixedRotation = true;
 
@@ -74,7 +68,8 @@ function create() {
 
 
 function update(){
-  game.physics.arcade.collide(ninja.sprite, layer);
+  game.physics.arcade.collide(ninja.sprite, layer2);
+
   ninja.doNothing = true;
   if (cursors.left.isDown){
     if(ninja.direction!='left'){
