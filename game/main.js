@@ -1,7 +1,7 @@
 var game = new Phaser.Game(640, 480, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render:render});
 //320, 240
 function preload() {
-  game.load.tilemap('objects', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
+  game.load.tilemap('objects', 'assets/level-1-1.json', null, Phaser.Tilemap.TILED_JSON);
   game.load.image('tiles', 'assets/Tileset.png');
   //game.load.spritesheet('ninja', 'assets/Spritesheet.png', 140, 80, 25);
   game.load.atlasJSONHash('ninja', 'assets/Spritesheet.png', 'assets/sprites.json');
@@ -35,8 +35,8 @@ function init() {
 
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
-  game.stage.backgroundColor = '#5C94FC';
-  game.add.tileSprite(0, 0, 768, 432, 'background');
+  game.stage.backgroundColor = '#000099';
+  //game.add.tileSprite(0, 0, 768, 432, 'background');
   //game.add.tileSprite(0, 0, 6784, 512, 'smb-1-1');
   map = game.add.tilemap('objects');
   map.addTilesetImage('Tileset', 'tiles');
