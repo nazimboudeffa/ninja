@@ -68,15 +68,15 @@ function create() {
   ninja.sprite.body.collideWorldBounds = true;
 
   //ninja.sprite.animations.add('idle', [0, 1, 2, 3], 10, true);
-  ninja.sprite.animations.add('idle', ['sprite1', 'sprite2', 'sprite3', 'sprite4'], 10, true);
+  ninja.sprite.animations.add('idle', ['sprite1', 'sprite2', 'sprite3', 'sprite4'], 4, true);
   //ninja.sprite.animations.add('jump', [5], 10, true);
-  ninja.sprite.animations.add('jump', ['sprite5'], 10, true);
-  //ninja.sprite.animations.add('left', [10, 11, 12], 10, true);
-  ninja.sprite.animations.add('left', ['sprite6', 'sprite7', 'sprite8'], 10, true);
+  ninja.sprite.animations.add('jump', ['sprite5', 'sprite6', 'sprite7', 'sprite8'], 10, true);
   //ninja.sprite.animations.add('throw', [15, 16, 17, 18, 19], 10, true);
-  ninja.sprite.animations.add('throw', ['sprite9', 'sprite10', 'sprite11', 'sprite12', 'sprite13'], 10, true);
+  ninja.sprite.animations.add('throw', ['sprite12', 'sprite13', 'sprite14', 'sprite15', 'sprite16'], 10, true);
   //ninja.sprite.animations.add('slash', [20, 21, 22, 23], 10, true);
-  ninja.sprite.animations.add('slash', ['sprite14', 'sprite15', 'sprite17', 'sprite16'], 10, true);
+  ninja.sprite.animations.add('slash', ['sprite17', 'sprite18', 'sprite19', 'sprite20'], 10, true);
+  //ninja.sprite.animations.add('left', [10, 11, 12], 10, true);
+  ninja.sprite.animations.add('left', ['sprite21', 'sprite22', 'sprite23', 'sprite24', 'sprite25', 'sprite26'], 10, true);
 
   ninja.sprite.body.fixedRotation = true;
 
@@ -86,7 +86,7 @@ function create() {
   shuriken.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
   shuriken.bulletSpeed = 500;
 
-  shuriken.trackSprite(ninja.sprite, 14, 0, false);
+  shuriken.trackSprite(ninja.sprite, 0, 0, false);
 
   cursors = game.input.keyboard.createCursorKeys();
   runButton = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
@@ -139,56 +139,61 @@ function update(){
 
   ninja.doNothing = true;
   if (cursors.left.isDown){
-    if(ninja.direction!='left'){
-      ninja.sprite.scale.x *= -1;
-      ninja.direction = 'left';
-    }
-    if(ninja.sprite.body.velocity.x==0 ||
-      (ninja.sprite.animations.currentAnim.name!='left' && ninja.sprite.body.onFloor())){
-      ninja.sprite.animations.play('left', 10, true);
-    }
+      if(ninja.direction != 'left'){
+        ninja.sprite.scale.x *= -1;
+        ninja.direction = 'left';
+      }
+      if(ninja.sprite.body.velocity.x == 0 || ninja.sprite.body.onFloor()){
+          ninja.sprite.animations.play('left', 10, true);
+      } else {
+          ninja.sprite.animations.play('jump', 4, false);
+      }
+      ninja.sprite.body.velocity.x -= 5;
+      if(runButton.isDown){
+        if(ninja.sprite.body.velocity.x < -200){
+          ninja.sprite.body.velocity.x = -200;
+        }
+      }else{
+        if(ninja.sprite.body.velocity.x < -120){
+          ninja.sprite.body.velocity.x = -120;
+        }
+      }
+      ninja.doNothing = false;
+  }
 
-    ninja.sprite.body.velocity.x -= 5;
-    if(runButton.isDown){
-      if(ninja.sprite.body.velocity.x<-200){
-        ninja.sprite.body.velocity.x = -200;
-      }
-    }else{
-      if(ninja.sprite.body.velocity.x<-120){
-        ninja.sprite.body.velocity.x = -120;
-      }
-    }
-    ninja.doNothing = false;
-  }else if (cursors.right.isDown){
+  if (cursors.right.isDown){
     if(ninja.direction!='right'){
       ninja.sprite.scale.x *= -1;
       ninja.direction = 'right';
     }
-    if(ninja.sprite.body.velocity.x==0 ||
-      (ninja.sprite.animations.currentAnim.name!='left' && ninja.sprite.body.onFloor())){
+    if(ninja.sprite.body.velocity.x==0 || ninja.sprite.body.onFloor()){
       ninja.sprite.animations.play('left', 10, true);
+    } else {
+      ninja.sprite.animations.play('jump', 4, false);
     }
     ninja.sprite.body.velocity.x += 5;
     if(runButton.isDown){
-      if(ninja.sprite.body.velocity.x>200){
+      if(ninja.sprite.body.velocity.x > 200){
         ninja.sprite.body.velocity.x = 200;
       }
     }else{
-      if(ninja.sprite.body.velocity.x>120){
+      if(ninja.sprite.body.velocity.x > 120){
         ninja.sprite.body.velocity.x = 120;
       }
     }
     ninja.doNothing = false;
-  } else if (cursors.up.justDown){
+  }
+
+  if (cursors.up.justDown){
     if(ninja.sprite.body.onFloor()){
       ninja.sprite.body.velocity.y = -380;//old is 310 but it's not suffisant
-      ninja.sprite.animations.play('jump', 10, true);
+      ninja.sprite.animations.play('jump', 4, false);
       ninja.doNothing = false;
     }
   }
 
-  if(fireButton.isDown){
-    ninja.sprite.animations.play('throw', 12, true);
+  if(fireButton.justDown){
+    ninja.sprite.animations.play('throw', 12, false);
     if (ninja.direction == 'right'){
       shuriken.fireAngle = Phaser.ANGLE_RIGHT;
     } else {
@@ -197,21 +202,22 @@ function update(){
     shuriken.fire();
     ninja.doNothing = false;
   }
-  if(slashButton.isDown){
+
+  if(slashButton.justDown){
     ninja.sprite.animations.play('slash', 10, true);
     ninja.doNothing = false;
   }
 
   if(ninja.doNothing){
-    if(ninja.sprite.body.velocity.x>10){
+    if(ninja.sprite.body.velocity.x > 10){
       ninja.sprite.body.velocity.x -= 10;
-    }else if(ninja.sprite.body.velocity.x<-10){
+    }else if(ninja.sprite.body.velocity.x < -10){
       ninja.sprite.body.velocity.x += 10;
     }else{
       ninja.sprite.body.velocity.x = 0;
     }
     if(ninja.sprite.body.onFloor()){
-      ninja.sprite.animations.play('idle', 10, true);
+      ninja.sprite.animations.play('idle', 8, true);
     }
   }
 
