@@ -50,7 +50,7 @@ function create() {
   map.setCollisionBetween(0, 255, true, layer2);
 
   ninja.sprite = game.add.sprite(180, 405, 'ninja');
-  ninja.sprite.scale.setTo(0.47, 0.47);
+  //ninja.sprite.scale.setTo(0.5, 0.5);
   ninja.sprite.anchor.x=0.5;
   ninja.sprite.anchor.y=0.5;
 
