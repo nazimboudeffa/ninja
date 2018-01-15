@@ -9,6 +9,8 @@ function preload() {
   game.load.image("smb-1-1", "assets/mario-1-1.png");
   game.load.image('shuriken', 'assets/shuriken.png');
   game.load.spritesheet('sprite', 'assets/1.png', 16, 16);
+  game.load.image("life", "assets/ninja.png");
+
 }
 
 var map;
@@ -16,10 +18,13 @@ var layer1, layer2;
 var cursors;
 var result;
 var shuriken;
-var enemy;
+var sprite;
 var runButton;
 var fireButton;
 var slashButton;
+var enemies;
+var lifes;
+var life;
 
 var ninja = {
   sprite: undefined,
@@ -35,7 +40,7 @@ function init() {
 
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
-  game.stage.backgroundColor = '#000099';
+  game.stage.backgroundColor = '#000';
   //game.add.tileSprite(0, 0, 768, 432, 'background');
   //game.add.tileSprite(0, 0, 6784, 512, 'smb-1-1');
   map = game.add.tilemap('objects');
@@ -55,8 +60,6 @@ function create() {
   //ninja.sprite.scale.setTo(0.5, 0.5);
   ninja.sprite.anchor.x=0.5;
   ninja.sprite.anchor.y=0.5;
-
-  enemy = game.add.sprite(1000, 405, 'sprite');
 
   game.physics.enable(ninja.sprite);
   game.physics.arcade.gravity.y = 700;
@@ -85,17 +88,54 @@ function create() {
 
   shuriken.trackSprite(ninja.sprite, 14, 0, false);
 
-
-
   cursors = game.input.keyboard.createCursorKeys();
   runButton = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
   fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   slashButton = game.input.keyboard.addKey(Phaser.Keyboard.X);
+
+  ninjas = [31, 132, 165, 175, 300, 320, 400, 450, 460, 470, 480, 670, 680];
+  enemies = game.add.group();
+  for(i=0; i < ninjas.length; i++){
+    enemies.add(addSprite(ninjas[i], 50));
+  }
+
+  lifes = game.add.group();
+  for(i=1; i<4; i++){
+    life = game.add.sprite(45 * i, 45, 'ninja');
+    lifes.add(life);
+  }
+
 }
 
+function addSprite(x, y){
+  sprite = game.add.sprite(x * 8, y * 8, 'sprite');
+  sprite.anchor.setTo(0.5, 0.5);
+  sprite.scale.setTo(1.5);
+  sprite.smoothed = false;
+
+  game.physics.enable(sprite);
+  sprite.body.collideWorldBounds = true;
+
+  sprite.body.bounce.x = 1;
+  sprite.body.velocity.setTo(-100, 0);
+
+  return sprite;
+}
+
+function hitEnemy (shuriken, enemies) {
+  enemies.kill();
+}
+
+function hitNinja (ninja, enemies) {
+  lifes.kill();
+}
 
 function update(){
   game.physics.arcade.collide(ninja.sprite, layer2);
+  game.physics.arcade.collide(enemies, layer2);
+
+  game.physics.arcade.overlap(shuriken.bullets, enemies, hitEnemy, null, this);
+  game.physics.arcade.overlap(ninja.sprite, enemies, hitNinja, null, this);
 
   ninja.doNothing = true;
   if (cursors.left.isDown){

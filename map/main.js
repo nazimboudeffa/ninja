@@ -51,7 +51,7 @@ function create() {
   //map.setCollisionBetween(0, 255, true, layer2);
   map.setCollisionBetween(0, 4095, true, layer2);//because it's an 8 px map
 
-  ninja.sprite = game.add.sprite(140, 360, 'ninja');
+  ninja.sprite = game.add.sprite(52 * 8, 27 * 8, 'ninja');
   //ninja.sprite.scale.setTo(0.5, 0.5);
   ninja.sprite.anchor.x=0.5;
   ninja.sprite.anchor.y=0.5;
